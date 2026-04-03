@@ -1,0 +1,19 @@
+{
+  "name": "ddvb-tech-plugins",
+  "description": "DDVB TECH plugins for Claude Code — product scoping, commercial proposals, and more",
+  "owner": {
+    "name": "DDVB TECH"
+  },
+  "plugins": [
+    {
+      "name": "ddvb-product-lab",
+      "source": "./",
+      "description": "Product scoping from brainstorming to blueprints, and interactive commercial proposal generation",
+      "version": "0.1.0",
+      "author": {
+        "name": "DDVB TECH"
+      },
+      "category": "product"
+    }
+  ]
+}
