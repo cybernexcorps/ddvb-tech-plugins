@@ -1,0 +1,9 @@
+{
+  "name": "brand-strategy",
+  "version": "1.0.0",
+  "description": "End-to-end brand repositioning workflow: spec, plan, review, execute. Extracts briefs from PDFs, builds SWOT/competitive analysis, develops brand platform, generates PPTX presentations with DDVB branding.",
+  "author": {
+    "name": "DDVB Analytics"
+  },
+  "keywords": ["branding", "strategy", "presentation", "SWOT", "competitive-analysis", "repositioning"]
+}
