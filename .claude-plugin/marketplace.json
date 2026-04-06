@@ -1,6 +1,6 @@
 {
   "name": "ddvb-tech-plugins",
-  "description": "DDVB TECH plugins for Claude Code — product scoping, commercial proposals, brand strategy, and more",
+  "description": "DDVB TECH plugins for Claude Code — product scoping, commercial proposals, brand strategy, naming, and more",
   "owner": {
     "name": "DDVB TECH"
   },
@@ -24,6 +24,16 @@
         "name": "DDVB Analytics"
       },
       "category": "strategy"
+    },
+    {
+      "name": "ddvb-naming-lab",
+      "source": "./ddvb-naming-lab",
+      "description": "Brand naming workflow: competitive research, copywriter brief, AI-assisted seed generation, candidate evaluation with scoring matrix, and client presentation.",
+      "version": "0.1.0",
+      "author": {
+        "name": "DDVB TECH"
+      },
+      "category": "naming"
     }
   ]
 }

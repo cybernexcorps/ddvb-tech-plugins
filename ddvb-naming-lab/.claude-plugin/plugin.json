@@ -1,0 +1,9 @@
+{
+  "name": "ddvb-naming-lab",
+  "version": "0.1.0",
+  "description": "Brand naming workflow: competitive naming research, copywriter brief generation, AI-assisted seed generation, candidate evaluation with scoring matrix, and client presentation.",
+  "author": {
+    "name": "DDVB TECH"
+  },
+  "keywords": ["naming", "branding", "copywriting", "linguistics", "competitive-research", "evaluation"]
+}
