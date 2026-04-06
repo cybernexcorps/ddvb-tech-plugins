@@ -1,7 +1,7 @@
 {
   "name": "ddvb-product-lab",
-  "version": "0.1.0",
-  "description": "DDVB TECH Product Lab — product scoping from brainstorming to blueprints, and interactive commercial proposal generation",
+  "version": "0.2.0",
+  "description": "DDVB TECH Product Lab — product scoping from brainstorming to blueprints, and commercial proposal generation in ddvb.tech website format",
   "author": {
     "name": "DDVB TECH"
   }

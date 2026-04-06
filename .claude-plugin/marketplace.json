@@ -8,8 +8,8 @@
     {
       "name": "ddvb-product-lab",
       "source": "./",
-      "description": "Product scoping from brainstorming to blueprints, and interactive commercial proposal generation",
-      "version": "0.1.0",
+      "description": "Product scoping from brainstorming to blueprints, and commercial proposal generation in ddvb.tech website format",
+      "version": "0.2.0",
       "author": {
         "name": "DDVB TECH"
       },

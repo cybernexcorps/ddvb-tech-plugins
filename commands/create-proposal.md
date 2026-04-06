@@ -1,12 +1,12 @@
 ---
-description: "Generate an interactive commercial proposal from client data"
+description: "Generate a commercial proposal in the ddvb.tech website format"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, WebSearch, WebFetch
 argument-hint: "[client-name-or-path-to-materials]"
 ---
 
-# Interactive Commercial Proposal Generator
+# Commercial Proposal Generator — Website Format
 
-Generate a polished, interactive HTML commercial proposal for a prospective client, using DDVB TECH branding and data gathered from call transcripts, meeting notes, sales decks, and web research.
+Generate a commercial proposal that deploys directly to the DDVB TECH website at `ddvb.tech/{locale}/proposals/{slug}`. The output is two files: a TypeScript data entry and an HTML body file.
 
 ## Inputs
 
@@ -25,14 +25,14 @@ If `$ARGUMENTS` is provided, treat it as the client name or path to materials. O
 
 ### Client Context
 Extract or ask for:
-- **Company name** (required)
+- **Company name** (required) — becomes the slug
 - **Industry / vertical**
 - **Key contacts** (names, roles)
 - **Website URL** (for research)
 - **Pain points** mentioned in calls/notes (use their exact words)
 - **Budget range** (if known)
 - **Timeline expectations**
-- **Deal stage** (intro / discovery / evaluation / negotiation)
+- **Referral** (if someone introduced the client)
 
 ### Research
 1. If a website URL is available, fetch and extract: company description, products/services, team, tech stack signals
@@ -42,129 +42,114 @@ Extract or ask for:
 ### DDVB TECH Context
 Know what we sell:
 - AI-powered automation for creative and PR agencies
-- Products: media comment writer, case study generator, SEO content agent, article rewriter
+- Products: media comment writer, case study generator, SEO content agent, article rewriter, tender automation
 - Platform: n8n workflows + LangChain/LangGraph agents + Next.js web apps
-- Delivery model: discovery → prototype → production (6-step implementation)
-- Pricing: project-based or subscription ($499-$1,499/mo+ for platform access)
+- Delivery model: discovery → prototype → production
+- Analytics dashboards (RFM, ABC/XYZ, Text-to-SQL, BigQuery)
 
 Map DDVB TECH capabilities to client's specific pain points.
 
-## Phase 1: Proposal Structure
+### Reference Existing Proposals
+Read existing proposals to match the established quality bar:
+- `Dev/ddvb-tech-website/src/data/proposals.ts` — all proposal data entries
+- `Dev/ddvb-tech-website/src/data/proposals/adapter-body.html` — Discovery/research format
+- `Dev/ddvb-tech-website/src/data/proposals/resinstudiocz-body.html` — Product/analytics format
 
-Generate an interactive multi-page HTML proposal with these sections:
+## Phase 1: Generate HTML Body
 
-### Cover Page (dark, full-screen)
-- DDVB TECH logo (from `Dev-Platform/web-apps/ddvb-marketing-app/public/logo.png`)
-- Tag: "КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ" (gold badge)
-- Title: "AI-автоматизация для **{Client Name}**"
-- Subtitle: one sentence addressing their core need
-- Meta: date, prepared by, version
-- Footer: DDVB TECH brand
+Create `src/data/proposals/{slug}-body.html` in the website repository at:
+`Dev/ddvb-tech-website/src/data/proposals/{slug}-body.html`
 
-### 01 — О вашем бизнесе (About Your Business)
-- Show we understand their world
-- Client profile cards (industry, size, products, market)
-- Pain points extracted from transcripts — use THEIR words in quotes
-- Each pain point as a card with icon, quote, and time/cost impact
+### Structure
 
-### 02-N — Solution Sections (one per solution direction)
-For each proposed solution:
-- Section title + subtitle explaining the approach
-- "How it works" — 3-5 step flow (numbered cards)
-- Key capabilities as feature cards (icon + title + 2-line description)
-- Expected result / outcome card (highlighted)
+Follow this section sequence (adapt to the deal — not all sections are required):
 
-### Architecture Section
-- Visual tech stack diagram (HTML/CSS, not image)
-- Integration points with client's existing systems
-- Data flow description
+1. **Cover** — `<header class="cover" id="top">` with logo, kicker, title, lead, meta, scroll indicator
+2. **Business section** — `<section id="business">` with stats bar, pain point cards (card-light), callouts with verbatim quotes
+3. **Divider** — `<div class="divider">` with headline summarizing the approach
+4. **Solution sections** (1-3 sections) — each `<section>` with flow diagram, numbered dark cards, callouts
+5. **Architecture/Stack** — `<section>` with `.tbl` table showing tech stack
+6. **Pricing** — `<section id="pricing">` with `.tbl` table + pricing cards + highlighted total callout
+7. **Plan** — `<section id="plan">` with `.timeline` and `.tl-item` phases
+8. **Why Us** — `<section id="why">` with 4 competency cards + `.checks` list
 
-### Timeline & Roadmap
-- Phase cards with duration, deliverables, and milestones
-- Visual timeline bar
-- Key decision points marked
+**Do NOT include a CTA section** — it's rendered by the React component from the TypeScript data.
 
-### Pricing
-- Tier cards or phase-based pricing
-- What's included in each tier
-- ROI comparison table (current cost vs. with automation)
-- "Экономия" (savings) highlight
+### HTML Rules
 
-### Почему мы (Why DDVB TECH)
-- 4 competency cards (proven stack, multilingual, industry expertise, partnership approach)
-- Client logos / social proof if available
+- No `<html>`, `<head>`, `<body>`, `<style>`, or `<script>` tags
+- No inline CSS except minimal overrides (e.g., `style="grid-column: span 2"`, `style="text-align:center"`)
+- Use CSS classes from `proposal.css` exclusively — see skill references
+- All content elements get `class="reveal"` (with delay variants `reveal-d1` through `reveal-d4` for stagger)
+- Use HTML entities: `&mdash;`, `&laquo;`, `&raquo;`, `&times;`, `&middot;`, `&rarr;`, `&#8381;`
+- Logo always: `<img class="cv-logo" src="/logo.png" alt="DDVB TECH">`
+- Images in `/proposals/` path (public directory)
 
-### Call to Action (dark, full-screen)
-- "Давайте обсудим" with contact details
-- Clear next step
-- QR code or meeting link (if provided)
+## Phase 2: Generate TypeScript Data Entry
 
-## Phase 2: Interactive Features
+Create the `Proposal` object to add to the `proposals` array in:
+`Dev/ddvb-tech-website/src/data/proposals.ts`
 
-The proposal MUST be interactive — not a static document:
+### Required Fields
 
-### Navigation
-- **Sticky sidebar or top nav** with section numbers — clicking scrolls to section
-- **Progress indicator** showing how far the reader has scrolled
-- **Smooth scroll** between sections
-
-### Animations
-- **Scroll-triggered reveals** — cards and sections fade/slide in as they enter viewport (use IntersectionObserver)
-- **Number counters** — key metrics animate from 0 to target value on scroll
-- **Hover effects** — cards lift with subtle shadow on hover
-- **Active section highlight** in navigation
-
-### Interactive Elements
-- **Expandable cards** — click to reveal detailed description
-- **ROI calculator** (if applicable) — sliders for input variables, live calculation of savings
-- **Tab switchers** — for solution variants or pricing tiers
-- **Timeline slider** — interactive phase exploration
-
-### Technical Requirements
-- **Single self-contained HTML file** — all CSS and JS inline
-- **No external dependencies** except Google Fonts (Inter)
-- **Print-friendly** — `@media print` styles that flatten to clean A4 pages
-- **Responsive** — works on desktop and tablet (mobile not required but nice)
-- **Smooth 60fps animations** — use `transform` and `opacity` only, no layout-triggering properties
-
-## Phase 3: Visual Design
-
-### DDVB TECH Brand System
-```css
-:root {
-  --ddvb-gold: #FDB71C;
-  --ddvb-black: #0D0D0D;
-  --ddvb-white: #FFFFFF;
-  --ddvb-gray-100: #F5F5F5;
-  --ddvb-gray-200: #E8E8E8;
-  --ddvb-gray-400: #AAAAAA;
-  --ddvb-body-text: #2A2A2A;
-  --ddvb-muted: #666666;
-  --ddvb-sidebar: #111111;
+```typescript
+{
+  slug: "{slug}",
+  locale: "ru",
+  client: "{Client Name}",
+  date: "{Month} 2026",
+  // referral: "Name" — if applicable
+  bodyHtml: loadProposalHtml("{slug}-body.html"),
+  hero: {
+    kicker: "Commercial Proposal",
+    title: "Headline for **{Client}**",
+    subtitle: "One-sentence value proposition.",
+    meta: [
+      { label: "Подготовлено для", value: "{Client}" },
+      { label: "Контакт", value: "{Contact Person}" },
+      { label: "Дата", value: "{Month} 2026" },
+      { label: "Формат", value: "{Type}" },
+    ],
+  },
+  stats: [ /* exactly 4 items */ ],
+  painPoints: { title: "...", items: [ /* from transcripts */ ] },
+  solutions: { title: "...", subtitle: "...", items: [ /* mapped to pain points */ ] },
+  pricing: { title: "Инвестиции", tiers: [ /* with highlighted totals */ ] },
+  timeline: { title: "План работ", phases: [ /* with durations */ ] },
+  cta: {
+    title: "Давайте **начнём**",
+    subtitle: "What happens after accepting.",
+    acceptLabel: "Принять предложение",
+    discussLabel: "Обсудить детали",
+    contactGrid: [
+      { label: "Telegram", value: "@slavickk" },
+      { label: "Email", value: "info@ddvb.tech" },
+      { label: "Web", value: "ddvb.tech" },
+      { label: "Следующий шаг", value: "{Next step}" },
+    ],
+  },
 }
 ```
 
-### Design Rules
-- **Sharp corners** (border-radius: 0) on structural elements — agency aesthetic
-- **High contrast**: black on white, white on black, black on gold
-- **Gold (#FDB71C) as accent only** — badges, borders, highlights, dividers. Never as large background for text
-- **Section pages**: white background, 50px padding, section number in gold, title in black, gold divider bar (48px wide, 3px tall)
-- **Cards**: #F5F5F5 background, 3px left border in gold, 24px padding
-- **Cover page**: full dark (#0D0D0D), gold accents, large typography
-- **CTA page**: full dark, centered, gold heading
+## Phase 3: Integration
 
-### Typography
-- **Headings**: Inter 700/800, tight letter-spacing
-- **Body**: Inter 400, 1.6 line-height
-- **Section numbers**: 11px, letter-spacing 3px, uppercase, gold, 700 weight
-- **Section titles**: 30px, 700 weight, black
+1. Add the new entry to the `proposals` array in `src/data/proposals.ts`
+2. Verify the HTML body file exists at `src/data/proposals/{slug}-body.html`
+3. Run `npm run build` from `Dev/ddvb-tech-website/` to verify static generation works
+4. The proposal will be available at `ddvb.tech/ru/proposals/{slug}`
 
-### Logo
-- Use the actual DDVB TECH logo PNG from `Dev-Platform/web-apps/ddvb-marketing-app/public/logo.png`
-- Copy to the output directory and reference as `ddvb-logo.png`
-- Display at 56px in header, 80px on cover
+## Phase 4: Present to User
 
-## Phase 4: Content Language
+Summarize the proposal:
+- **URL**: `ddvb.tech/ru/proposals/{slug}`
+- **Sections created**: list each section with brief content summary
+- **Key data used**: pain points quoted, solutions mapped, pricing structured
+- **Assumptions made**: flag anything inferred vs. explicitly stated
+- **Files created**:
+  - `src/data/proposals/{slug}-body.html`
+  - Entry added to `src/data/proposals.ts`
+
+## Content Language
 
 - **All proposal content in Russian** (target market)
 - Technical terms can stay in English (API, AI, LLM, CRM, etc.)
@@ -173,21 +158,11 @@ The proposal MUST be interactive — not a static document:
 - Short sentences, active voice
 - Pain points: quote the client verbatim (in Russian)
 
-## Phase 5: Delivery
-
-1. Save proposal as `{ClientName}_Commercial_Proposal.html` in the `Presales/` directory
-2. Copy logo to `Presales/ddvb-logo.png` if not already there
-3. Present to user with:
-   - File path
-   - Section summary (what's in each section)
-   - Key assumptions made (flag for review)
-   - Suggested follow-up actions
-
 ## Important
 
-- The proposal must feel bespoke, not templated — reference specific client data throughout
+- The HTML body must look identical in style to existing proposals (adapter, resinstudiocz)
 - Pain points from transcripts are the most powerful content — use verbatim quotes generously
 - Every solution section must map directly to a stated pain point
-- Interactive features are non-negotiable — this is what differentiates from a PDF
-- The HTML must be a single self-contained file (no external assets except the logo PNG and Google Fonts)
-- Test that IntersectionObserver animations work correctly before delivering
+- The TypeScript data and HTML body must be consistent (same stats, same pricing, same timeline)
+- Do NOT duplicate content that belongs in the CTA (the React component handles it)
+- Test that the build works before delivering

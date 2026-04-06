@@ -1,316 +1,183 @@
-# Proposal Design System
+# Proposal CSS Class Catalog
+
+All classes are defined in `proposal.css` (loaded automatically by the page component). Do NOT write inline CSS — use these classes exclusively.
 
 ## CSS Variables
 
 ```css
 :root {
-  --ddvb-gold: #FDB71C;
-  --ddvb-black: #0D0D0D;
-  --ddvb-sidebar: #111111;
-  --ddvb-white: #FFFFFF;
-  --ddvb-gray-100: #F5F5F5;
-  --ddvb-gray-200: #E8E8E8;
-  --ddvb-gray-400: #AAAAAA;
-  --ddvb-body-text: #2A2A2A;
-  --ddvb-muted: #666666;
+  --gold: #FDB71C;
+  --gold-10: rgba(253,183,28,0.10);
+  --gold-20: rgba(253,183,28,0.20);
+  --gold-40: rgba(253,183,28,0.40);
+  --black: #0A0A0A;
+  --ink: #141414;
+  --surface: #1A1A1E;
+  --chalk: #FAFAF8;
+  --cream: #F2F0EB;
+  --stone: #888;
+  --mist: #bbb;
+  --display: 'Atyp Display', Georgia, serif;
+  --text: 'Atyp Text', -apple-system, sans-serif;
 }
 ```
 
-## Page Structure
+## Reveal Animations
 
-```css
-/* Each section = one "page" (min-height matches A4 proportions) */
-.section-page {
-  padding: 50px;
-  min-height: 1123px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
+Add `reveal` class to any element that should animate on scroll. The page component's IntersectionObserver adds `.visible` when the element enters the viewport.
 
-/* Subtle bottom separator between sections */
-.section-page::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 50px; right: 50px;
-  height: 1px;
-  background: var(--ddvb-gray-200);
-}
-```
+| Class | Effect |
+|-------|--------|
+| `reveal` | Fade + slide up (32px translateY, 0.7s cubic-bezier) |
+| `reveal reveal-d1` | Same + 0.1s delay |
+| `reveal reveal-d2` | Same + 0.2s delay |
+| `reveal reveal-d3` | Same + 0.3s delay |
+| `reveal reveal-d4` | Same + 0.4s delay |
 
-## Section Headers
+## Cover (`<header class="cover">`)
 
-```css
-.section-number {
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ddvb-gold);
-  font-weight: 700;
-  margin-bottom: 8px;
-}
+Full-viewport dark cover with centered content, pulsing radial gradient behind, gold 3px bottom border.
 
-.section-title {
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--ddvb-black);
-  margin-bottom: 4px;
-  letter-spacing: -0.3px;
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `cover` | `<header>` | min-height: 100vh, centered flex column, dark bg |
+| `cv-logo` | `<img>` | 64px square, fade-down animation |
+| `cv-kicker` | `<div>` | 11px uppercase, letter-spacing 5px, gold color |
+| `cover h1` | `<h1>` | Atyp Display, clamp(36px, 5vw, 56px), weight 300 |
+| `cover h1 strong` | `<strong>` | Weight 700, gold color |
+| `cv-lead` | `<p>` | 16px, weight 300, 50% white opacity, max-width 520px |
+| `cv-meta` | `<div>` | Flex row, gap 40px, top border 1px white/6% |
+| `cv-meta-item` | `<dl>` | Contains `<dt>` (9px gold uppercase) + `<dd>` (13px white/55%) |
+| `cv-scroll` | `<div>` | Absolute bottom, bouncing scroll indicator |
 
-.section-divider {
-  width: 48px;
-  height: 3px;
-  background: var(--ddvb-gold);
-  margin: 16px 0 32px;
-}
+## Sections (`<section>`)
 
-.section-subtitle {
-  font-size: 15px;
-  color: var(--ddvb-muted);
-  margin-bottom: 32px;
-  line-height: 1.6;
-  max-width: 580px;
-}
-```
+Standard content container: 100px vertical padding, max-width 900px, auto margins.
 
-## Cards
+| Class | Element | Notes |
+|-------|---------|-------|
+| `sec-full` | modifier | Removes max-width, zero side padding |
+| `sec-n` | `<div>` | Section number: 10px, weight 600, letter-spacing 4px, uppercase, gold. Format: `01 &mdash; Title` |
+| `sec-t` | `<div>` | Section title: Atyp Display, clamp(28px, 3.5vw, 38px), weight 300, chalk color |
+| `sec-s` | `<p>` | Section subtitle: 15px, weight 300, stone color, max-width 580px, margin-bottom 48px |
 
-```css
-.card-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-.card-grid.three { grid-template-columns: 1fr 1fr 1fr; }
-.card-grid.single { grid-template-columns: 1fr; }
+## Stats (`.stats`)
 
-.card {
-  background: var(--ddvb-gray-100);
-  padding: 24px;
-  border-left: 3px solid var(--ddvb-gold);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+4-column grid with 2px gold gap between cells.
 
-.card-number {
-  display: inline-flex;
-  width: 28px; height: 28px;
-  background: var(--ddvb-black);
-  color: var(--ddvb-gold);
-  font-size: 12px;
-  font-weight: 800;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `stats` | `<div>` | Grid, 4 columns, gold background (visible as gap lines) |
+| `stat` | `<div>` | Surface bg, 32px padding, centered text, hover darkens |
+| `stat-v` | `<div>` | Value: Atyp Display, 36px, weight 300, gold color |
+| `stat-l` | `<div>` | Label: 10px, weight 500, letter-spacing 2px, uppercase, white/40% |
 
-.card h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--ddvb-black);
-  margin-bottom: 8px;
-}
+## Cards (`.cards`)
 
-.card p {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--ddvb-muted);
-}
-```
+Grid layout with 2px gap. Cards have bottom gold border and hover-lift animation.
 
-## Cover Page
+| Class | Element | Notes |
+|-------|---------|-------|
+| `cards` | `<div>` | Grid container, 2px gap, margin-bottom 40px |
+| `cards-2` | modifier | 2-column grid |
+| `cards-3` | modifier | 3-column grid |
+| `card` | `<div>` | 28px padding, bottom 2px gold border, hover: lift 4px + shadow |
+| `card-light` | modifier | Cream background (`var(--cream)`), ink text |
+| `card-dark` | modifier | Surface background (`var(--surface)`), white headings, white/50% text |
+| `card-num` | `<div>` | Atyp Display, 28px, weight 300, gold color, margin-bottom 8px |
+| `card h3` | `<h3>` | 14px, weight 700, Atyp Text |
+| `card p` | `<p>` | 13px, stone color, line-height 1.55 |
 
-```css
-.cover {
-  min-height: 1123px;
-  background: var(--ddvb-black);
-  color: var(--ddvb-white);
-  padding: 50px;
-  display: flex;
-  flex-direction: column;
-}
+Span across columns with inline style: `style="grid-column: span 2"`
 
-.cover-tag {
-  display: inline-block;
-  background: var(--ddvb-gold);
-  color: var(--ddvb-black);
-  padding: 6px 16px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  width: fit-content;
-}
+## Flow Diagram (`.flow`)
 
-.cover h1 {
-  font-size: 44px;
-  font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-}
-.cover h1 strong {
-  font-weight: 700;
-  color: var(--ddvb-gold);
-}
+Horizontal step flow with arrows between steps.
 
-.cover-subtitle {
-  font-size: 18px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.7);
-  line-height: 1.6;
-  max-width: 520px;
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `flow` | `<div>` | Flex row, centered, surface bg, 36px padding |
+| `flow-step` | `<div>` | Flex 1, centered text, hover: scale 1.08 |
+| `flow-icon` | `<div>` | 28px emoji/text, margin-bottom 8px |
+| `flow-label` | `<div>` | 10px uppercase, weight 600, white/60% |
+| `flow-arr` | `<div>` | Arrow `&rarr;`, Atyp Display, gold, 20px |
 
-.cover-meta {
-  display: flex;
-  gap: 40px;
-  margin-top: 20px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-```
+## Divider (`.divider`)
 
-## Pain Point Quote Cards
+Full-width gold background section with giant "D D V B" watermark.
 
-```css
-.pain-card {
-  background: var(--ddvb-gray-100);
-  padding: 24px;
-  border-left: 3px solid var(--ddvb-gold);
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `divider` | `<div>` | Gold bg, 120px padding, centered, overflow hidden |
+| `divider h2` | `<h2>` | Atyp Display, clamp(32px, 4vw, 48px), weight 300, black color |
+| `divider p` | `<p>` | 14px, black/45% opacity, weight 500 |
 
-.pain-card .quote {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--ddvb-body-text);
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
+## Callout (`.callout`)
 
-.pain-card .quote::before { content: '\201C'; color: var(--ddvb-gold); font-size: 24px; margin-right: 4px; }
+Highlighted note/quote box with gold left border.
 
-.pain-card .impact {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ddvb-black);
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `callout` | `<div>` | Gold-10 bg, 3px gold left border, 20px/24px padding, hover: border widens to 6px |
+| `callout p` | `<p>` | 13px, white/70%, line-height 1.65 |
+| `callout strong` | `<strong>` | Chalk color |
 
-.pain-card .impact span {
-  color: var(--ddvb-gold);
-}
-```
+Variant for emphasis: add `style="background:var(--gold-20);border-left-color:var(--gold)"` for stronger highlight.
 
-## Timeline
+## Table (`.tbl`)
 
-```css
-.timeline {
-  display: flex;
-  gap: 2px;
-  margin: 32px 0;
-}
+Full-width table with dark headers and gold accents.
 
-.timeline-phase {
-  flex: 1;
-  background: var(--ddvb-black);
-  padding: 20px 16px;
-  color: var(--ddvb-white);
-}
-.timeline-phase:first-child { border-left: 3px solid var(--ddvb-gold); }
+| Class | Element | Notes |
+|-------|---------|-------|
+| `tbl` | `<table>` | Full width, collapse borders, Atyp Text 13px |
+| `tbl th` | `<th>` | Surface bg, gold text, 10px uppercase, 2px gold bottom border |
+| `tbl td` | `<td>` | 12px/16px padding, white/70% text, 1px white/4% bottom border |
+| `tbl td strong` | `<strong>` | Chalk color |
+| `tbl em` | `<em>` | Stone color, 10px size |
+| `tbl tr:hover td` | hover | Gold-04 background |
 
-.phase-number {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--ddvb-gold);
-}
-.phase-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-.phase-duration {
-  font-size: 10px;
-  color: var(--ddvb-gray-400);
-  margin-top: 6px;
-}
-```
+## Timeline (`.timeline`)
 
-## Pricing Table
+Vertical timeline with gold left border and dot markers.
 
-```css
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
+| Class | Element | Notes |
+|-------|---------|-------|
+| `timeline` | `<div>` | Padding-left 28px, 2px gold-40 left border |
+| `tl-item` | `<div>` | 28px bottom padding, left-padded 24px, hover: indents to 30px |
+| `tl-item::before` | pseudo | 10px gold square at -33px left, hover: scale 1.3 + glow |
+| `tl-step` | `<div>` | 10px, weight 600, letter-spacing 2px, uppercase, gold. E.g. "Неделя 01" |
+| `tl-title` | `<div>` | Atyp Display, 17px, weight 500, chalk color |
+| `tl-desc` | `<div>` | 13px, stone color, line-height 1.55 |
 
-.price-card {
-  background: var(--ddvb-gray-100);
-  padding: 24px;
-  border-top: 3px solid var(--ddvb-gold);
-  text-align: center;
-}
-.price-card.featured {
-  background: var(--ddvb-black);
-  color: var(--ddvb-white);
-}
+## Checklist (`.checks`)
 
-.price-value {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--ddvb-black);
-}
-.price-card.featured .price-value { color: var(--ddvb-gold); }
+Styled unordered list with gold bullet squares.
 
-.price-unit {
-  font-size: 12px;
-  color: var(--ddvb-muted);
-}
-```
+| Class | Element | Notes |
+|-------|---------|-------|
+| `checks` | `<ul>` | No list-style, margin-bottom 32px |
+| `checks li` | `<li>` | 13px, white/65%, 10px padding, 24px left padding, 1px bottom border, hover: chalk + indent |
+| `checks li::before` | pseudo | 8px gold square at left 0, hover: scale 1.3 |
 
-## ROI Comparison
+## Schematics (`.sch`)
 
-```css
-.roi-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.roi-table th {
-  text-align: left;
-  padding: 10px 16px;
-  background: var(--ddvb-gray-100);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-bottom: 2px solid var(--ddvb-black);
-}
-.roi-table td {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--ddvb-gray-200);
-  font-size: 13px;
-}
-.roi-table .savings {
-  color: var(--ddvb-gold);
-  font-weight: 700;
-}
-```
+Container for images/diagrams.
 
-## Print Styles
+| Class | Element | Notes |
+|-------|---------|-------|
+| `sch` | `<div>` | Surface bg, 20px padding, centered, hover: scale 1.01 |
+| `sch-t` | `<p>` | Title: 14px, weight 600, chalk color |
+| `sch-d` | `<p>` | Description: 12px, stone color, line-height 1.5 |
+| `sch img` | `<img>` | max-width 100%, auto height, block centered |
 
-```css
-@media print {
-  body { background: white; }
-  .section-page { break-inside: avoid; page-break-after: always; }
-  .cover { break-after: page; }
-  .nav, .progress-bar { display: none; }
-  .card:hover { transform: none; box-shadow: none; }
-  [data-animate] { opacity: 1 !important; transform: none !important; }
-}
-```
+## Responsive (768px breakpoint)
+
+Automatically handled by proposal.css:
+- Sections: 60px/24px padding
+- Stats: 2-column grid
+- Cards: single column
+- Flow: flex-wrap with 8px gap
+- Cover meta: vertical stack
+- CTA grid: 2-column
+- Nav links: hidden
