@@ -1,13 +1,13 @@
 {
   "name": "ddvb-tech-plugins",
-  "description": "DDVB TECH plugins for Claude Code — product scoping, commercial proposals, brand strategy, naming, and more",
+  "description": "DDVB TECH plugins for Claude Code — product scoping, brand strategy, brand naming, and more",
   "owner": {
     "name": "DDVB TECH"
   },
   "plugins": [
     {
-      "name": "ddvb-product-lab",
-      "source": "./ddvb-product-lab",
+      "name": "ddvb-product-scoping",
+      "source": "./ddvb-product-scoping",
       "description": "Product scoping from brainstorming to blueprints, and commercial proposal generation in ddvb.tech website format",
       "version": "0.2.0",
       "author": {
@@ -16,18 +16,18 @@
       "category": "product"
     },
     {
-      "name": "brand-strategy",
-      "source": "./brand-strategy",
-      "description": "End-to-end brand repositioning workflow: spec, plan, review, execute. Extracts briefs from PDFs, builds SWOT/competitive analysis, develops brand platform, generates PPTX presentations with DDVB branding.",
+      "name": "ddvb-brand-strategy",
+      "source": "./ddvb-brand-strategy",
+      "description": "End-to-end brand repositioning workflow: spec, plan, review, execute. Adaptive competitive research with industry-specific dimensions, SWOT/competitive analysis, brand platform, PPTX generation.",
       "version": "1.1.0",
       "author": {
-        "name": "DDVB Analytics"
+        "name": "DDVB TECH"
       },
       "category": "strategy"
     },
     {
-      "name": "ddvb-naming-lab",
-      "source": "./ddvb-naming-lab",
+      "name": "ddvb-brand-naming",
+      "source": "./ddvb-brand-naming",
       "description": "Brand naming workflow: competitive research, copywriter brief, AI-assisted seed generation, candidate evaluation with scoring matrix, and client presentation.",
       "version": "0.1.0",
       "author": {
