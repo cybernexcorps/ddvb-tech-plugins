@@ -143,6 +143,19 @@ ddvb-tech-plugins/
 
 ---
 
+## Documentation
+
+- **[Getting Started](docs/getting-started.md)** — Install, configure, run your first command
+- **[Reference](docs/reference.md)** — All commands, skills, dimensions, strategies, scoring matrix
+- **How-to Guides:**
+  - [Create a website proposal](docs/how-to/create-website-proposal.md)
+  - [Run a brand strategy project](docs/how-to/run-brand-strategy.md)
+  - [Run a naming project](docs/how-to/run-naming-project.md)
+  - [Customize research dimensions](docs/how-to/customize-research-dimensions.md)
+  - [Evaluate name candidates](docs/how-to/evaluate-name-candidates.md)
+
+---
+
 ## Author
 
 **[DDVB TECH](https://ddvb.tech)** — AI-powered products for creative and PR agencies.
