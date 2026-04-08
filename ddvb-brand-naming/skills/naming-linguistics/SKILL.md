@@ -100,16 +100,82 @@ Method: Web fetch or search for each platform + handle.
 
 ### Trademark Database Search
 
-Check in relevant registries:
+Three-tier approach, from most to least automated:
 
-| Registry | Market | URL / Method |
-|----------|--------|-------------|
-| Rospatent (ФИПС) | Russia | fips.ru — search by name in relevant ICGS classes |
-| NIIS Kazakhstan | Kazakhstan | niis.kz — trademark search |
-| WIPO Global Brand Database | International | branddb.wipo.int — search across jurisdictions |
-| EUIPO | EU | euipo.europa.eu — EU trademark search |
+#### Tier 1: EUIPO API (EU marks — official, free, automated)
 
-Method: Web search for each candidate + registry. Flag exact matches and confusingly similar marks in the same ICGS class.
+Official REST API. Register at https://dev.euipo.europa.eu/, get API key.
+
+```bash
+# Search for a name in Nice classes 35 and 42
+curl -X GET \
+  'https://api.euipo.europa.eu/trademark-search/trademarks?query=wordMarkSpecification.verbalElement==*CANDIDATE*%20and%20niceClasses%3Dall%3D(35,42)&page=0&size=10' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -H 'X-IBM-Client-Id: YOUR_CLIENT_ID'
+```
+
+RSQL query syntax:
+- `wordMarkSpecification.verbalElement==*NAME*` — fuzzy name match
+- `niceClasses=all=(35,42)` — filter by Nice classes
+- `status==REGISTERED` — only registered marks
+- `applicationDate>=2020-01-01` — date filter
+
+Covers ~3.1M EU trademarks (EUTM). Does NOT cover Russian or Kazakh national marks.
+
+**Setup:** Environment variable `EUIPO_CLIENT_ID` required. Get it free at dev.euipo.europa.eu.
+
+#### Tier 2: WIPO Global Brand Database (international marks — semi-automated)
+
+Covers marks with international protection via Madrid System:
+- Russia (RU): ~404K marks
+- Kazakhstan (KZ): ~207K marks
+- EU (EM): ~3.1M marks
+
+**Limitation:** Only Madrid-system marks designated to RU/KZ, NOT purely national marks filed directly with Rospatent. Coverage is partial.
+
+**Automation status:** The API at `api.branddb.wipo.int/search` exists but:
+- Requires solving an Altcha proof-of-work CAPTCHA (SHA-256)
+- Responses are AES-encrypted
+- TOS prohibits automated querying
+
+**Practical approach for WIPO:** Use web search to query WIPO Brand Database results:
+```
+Search: site:branddb.wipo.int "CANDIDATE NAME" OR "CANDIDATE"
+```
+Or instruct the user to check manually at https://branddb.wipo.int with filters: Designation=RU, Nice Class=[relevant].
+
+#### Tier 3: Rospatent / FIPS (Russian national marks — manual + web search)
+
+The complete Russian trademark database (including national-only marks not in WIPO) is at:
+- **Open Register:** https://new.fips.ru/registers-web/ — free, limited search, granted marks only
+- **Open API portal:** https://online.rospatent.gov.ru/open-data/open-api — may have API access (investigate per project)
+- **Paid ISS:** https://new.fips.ru/iiss/ — comprehensive, ~15-30K RUB/year subscription
+
+**Note:** The Rospatent Open API at `searchplatform.rospatent.gov.ru/patsearch/v0.2/` covers **patents only**, NOT trademarks.
+
+**Practical approach for Rospatent:** Use web search as a proxy:
+```bash
+# Search for trademark conflicts via web
+Web search: "товарный знак" "CANDIDATE" site:new.fips.ru OR site:fips.ru
+Web search: "CANDIDATE" МКТУ [class number] товарный знак Россия
+```
+
+#### Tier 4: Kazakhstan NIIS (Kazakh marks — manual)
+
+- **Registry:** https://niis.kz — trademark search interface
+- No known public API
+- Use web search: `"CANDIDATE" товарный знак site:niis.kz`
+
+### Trademark Check Automation Summary
+
+| Source | Method | Coverage | Completeness |
+|--------|--------|----------|-------------|
+| EUIPO API | REST API (automated) | EU marks | Full |
+| WIPO Brand DB | Web search (semi-auto) | International marks in RU/KZ | Partial (~60-70% of RU marks) |
+| Rospatent FIPS | Web search (semi-auto) | Russian national marks | Partial (granted only via free register) |
+| NIIS KZ | Web search (manual) | Kazakh marks | Low |
+
+**Always add disclaimer:** "Trademark search results are preliminary. A professional trademark attorney search through FIPS ISS (paid) is recommended before filing."
 
 **Key ICGS classes by industry:**
 - Logistics: 35 (business management), 39 (transport/storage)
